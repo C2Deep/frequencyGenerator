@@ -1,4 +1,3 @@
-// Name        : Sound Waves Generator.
 // Description : Generate different types of sound waves through the default speaker of your system
 //                             - Generate audible frequencies in different types ( sine , square, triangualr, sawtooth).
 //                             - Adjust frequency, phase , volume, and the wave type of each channel independently.
@@ -77,6 +76,7 @@ void clear_line(char fp);           // Clear terminal line
 void write_frames(int pcmFD, short *ptr, snd_pcm_uframes_t cPtr);   // Write frames to speaker
 void wave_generator(int chn, short *buf, snd_pcm_uframes_t frames); // Generate wave pattern
 void back_space(void);              // Back space in terminal
+void help(void);                    // Help message
 
 int main(int argc, char *argv[])
 {
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 
     int c;
 
-    while((c = getopt(argc, argv, "r:l:f:F:v:V:w:W:")) != -1)
+    while((c = getopt(argc, argv, "r:l:f:F:v:V:w:W:h")) != -1)
     {
         switch(c)
         {
@@ -137,6 +137,8 @@ int main(int argc, char *argv[])
             case 'W':
                 GwaveType[1] = atoi(optarg) % 4;
                 break;
+            default:
+                help();
         }
 
     }
@@ -893,4 +895,24 @@ void back_space(void)
             for(int i = 0 ; i < 3 ; ++i)
                 write(STDOUT_FILENO, &BS[i], 1);
 
+}
+
+// Name             : help
+// Parameters       : void
+// Call             : printf(), exit()
+// Called by        : main()
+// Description      : Help message
+void help(void)
+{
+    printf(
+            "\nUsage : ./freqGen [options]\n\n"
+            "-r      sample rate (Hz)\n"
+            "-l      buffer time uSec (latency)\n"
+            "-f      freqency for channel 1 (Left)\n"
+            "-F      frequency for channel 2 (Right)\n"
+            "-v      volume for channel 1 (Left)\n"
+            "-V      volume for channel 2 (Right)\n"
+            "-h      help message\n"
+          );
+    exit(0);
 }
