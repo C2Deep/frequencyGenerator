@@ -1,6 +1,6 @@
 // Description : Generate different types of sound waves through the default speaker of your system
 //                             - Generate audible frequencies in different types ( sine , square, triangualr, sawtooth).
-//                             - Adjust frequency, phase , volume, and the wave type of each channel independently.
+//                             - Adjust Frequency, Phase , Volume, and the Wave type of each channel independently.
 //
 
 #include<stdio.h>
@@ -334,7 +334,7 @@ void wave_generator(int chn, short *buf, snd_pcm_uframes_t frames)
 
     double step;
     static double wt[CHANNELS] = {0.0, 0.0};
-    static unsigned int maxVal = 32767; // Generalize?
+    static unsigned int maxVal = 32767;
     static double scale = 2.0 / M_PI;
     int i = 0;
 
@@ -589,60 +589,60 @@ void *Tspeaker_CTRL(void *)
                 break;
 
             // VOLUME KEYS
-            case 'a':   // Increase the volume of 1'st channel (Left) by 5%
+            case 'a':   // Increase the volume of 1'st channel (Left) by 1%
                 GvolContactor[0] = 1;     // Tell the generate_sine() change in sound is possible
                 while(!GvolContactee[0]);
-                Gvol[0] = (Gvol[0] + 0.05) > 1.0 ? 1.0 : Gvol[0] + 0.05;
+                Gvol[0] = (Gvol[0] + 0.01) > 1.0 ? 1.0 : Gvol[0] + 0.01;
                 GvolContactor[0] = 0;        // Possible change in has been made
                 INPUT_RESET();
                 update_info();
                 break;
-            case 'z':   // Decrease the volume of the 1'st channel (Left) by 5%
+            case 'z':   // Decrease the volume of the 1'st channel (Left) by 1%
                 GvolContactor[0] = 1;     // Tell the generate_sine() change in sound is possible
                 while(!GvolContactee[0]);
-                Gvol[0] = (Gvol[0] - 0.05) > 0.0 ? Gvol[0] - 0.05 : 0.0;
+                Gvol[0] = (Gvol[0] - 0.01) > 0.0 ? Gvol[0] - 0.01 : 0.0;
                 GvolContactor[0] = 0;        // Possible change in has been made
                 INPUT_RESET();
                 update_info();
                 break;
-            case 's':   // Increase the volume of both channels by 5%
+            case 's':   // Increase the volume of both channels by 1%
                 GvolContactor[0] = 1;     // Tell the generate_sine() change in sound is possible
                 while(!GvolContactee[0]);
-                Gvol[0] = (Gvol[0] + 0.05) > 1.0 ? 1.0 : Gvol[0] + 0.05;
+                Gvol[0] = (Gvol[0] + 0.01) > 1.0 ? 1.0 : Gvol[0] + 0.01;
                 GvolContactor[0] = 0;
 
                 GvolContactor[1] = 1;
                 while(!GvolContactee[1]);
-                Gvol[1] = (Gvol[1] + 0.05) > 1.0 ? 1.0 : Gvol[1] + 0.05;
+                Gvol[1] = (Gvol[1] + 0.01) > 1.0 ? 1.0 : Gvol[1] + 0.01;
                 GvolContactor[1] = 0;
                 INPUT_RESET();
                 update_info();
                 break;
-            case 'x':   // Decrease the volume of both channels by %5
+            case 'x':   // Decrease the volume of both channels by 1%
                 GvolContactor[0] = 1;
                 while(!GvolContactee[0]);
-                Gvol[0] = (Gvol[0] - 0.05) > 0.0 ? Gvol[0] - 0.05 : 0.0;
+                Gvol[0] = (Gvol[0] - 0.01) > 0.0 ? Gvol[0] - 0.01 : 0.0;
                 GvolContactor[0] = 0;
 
                 GvolContactor[1] = 1;
                 while(!GvolContactee[1]);
-                Gvol[1] = (Gvol[1] - 0.05) > 0.0 ? Gvol[1] - 0.05 : 0.0;
+                Gvol[1] = (Gvol[1] - 0.01) > 0.0 ? Gvol[1] - 0.01 : 0.0;
                 GvolContactor[1] = 0;
                 INPUT_RESET();
                 update_info();
                 break;
-            case 'd':   // Increase the volume of the 2nd channel (Right) by 5%
+            case 'd':   // Increase the volume of the 2nd channel (Right) by 1%
                 GvolContactor[1] = 1;     // Tell the generate_sine() change in sound is possible
                 while(!GvolContactee[1]);
-                Gvol[1] = (Gvol[1] + 0.05) > 1.0 ? 1.0 : Gvol[1] + 0.05;
+                Gvol[1] = (Gvol[1] + 0.01) > 1.0 ? 1.0 : Gvol[1] + 0.01;
                 GvolContactor[1] = 0;        // Possible change in has been made
                 INPUT_RESET();
                 update_info();
                 break;
-            case 'c':   // Decrease the volume of the 2nd channel (Right) by 5%
+            case 'c':   // Decrease the volume of the 2nd channel (Right) by 1%
                 GvolContactor[1] = 1;     // Tell the generate_sine() change in sound is possible
                 while(!GvolContactee[1]);
-                Gvol[1] = (Gvol[1] - 0.05) > 0.0 ? Gvol[1] - 0.05 : 0.0;
+                Gvol[1] = (Gvol[1] - 0.01) > 0.0 ? Gvol[1] - 0.01 : 0.0;
                 GvolContactor[1] = 0;        // Possible change in has been made
                 INPUT_RESET();
                 update_info();
@@ -908,10 +908,10 @@ void help(void)
             "\nUsage : ./freqGen [options]\n\n"
             "-r      sample rate (Hz)\n"
             "-l      buffer time uSec (latency)\n"
-            "-f      freqency for channel 1 (Left)\n"
-            "-F      frequency for channel 2 (Right)\n"
-            "-v      volume for channel 1 (Left)\n"
-            "-V      volume for channel 2 (Right)\n"
+            "-f      channel 1 frequency (Left)\n"
+            "-F      channel 2 frequency (Right)\n"
+            "-v      channel 1 volume (Left)\n"
+            "-V      channel 2 volume (Right)\n"
             "-h      help message\n"
           );
     exit(0);
