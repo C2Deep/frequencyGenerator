@@ -41,7 +41,6 @@
 unsigned int Grate = RATE;                                                         // Default sample rate
 unsigned int GbufferTime = BUFFER_TIME;                                            // Default buffer time (latency) in us
 unsigned int GbufferSize = BUFFER_TIME * (RATE * 0.000001);                        // Default buffer size (frames)
-unsigned int GperiodSize = 32;                                                     // It's NOT included with hardware parameters settings
 
 enum { SINE_WAVE, SQUARE_WAVE, TRIANGULAR_WAVE, SAWTOOTH_WAVE};
 char *GwaveTypes[4] = { "SINE", "SQUARE", "TRIANGULAR", "SAWTOOTH"};
@@ -268,7 +267,7 @@ void set_swparams(int pcmFD)
     sndPcmSwParams.tstamp_mode = SNDRV_PCM_TSTAMP_NONE;          /* timestamp mode */
     sndPcmSwParams.period_step = 1;
     sndPcmSwParams.sleep_min =   0;
-    sndPcmSwParams.avail_min =  GperiodSize;          // Allow the transfer when at least period_size samples can be processed
+    sndPcmSwParams.avail_min =  32;          // Allow the transfer when at least 32 samples can be processed
 
     sndPcmSwParams.xfer_align = 1;
 
