@@ -22,7 +22,7 @@
 #define PERIODS         32
 #define PERIOD_SIZE     256
 #define RATE            44100   // Sample rate
-#define BUFFER_TIME     8000    // 12 ms
+#define BUFFER_TIME     8000    // 8 ms
 #define MAX_DEVICE_NAME    256
 #define MAX_FILE_PATH      256
 
