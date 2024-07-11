@@ -1,6 +1,6 @@
 // Description : Generate different types of sound waves through the default speaker of your system
 //                             - Generate audible frequencies in different types ( sine , square, triangualr, sawtooth).
-//                             - Adjust Frequency, Phase , Volume, and the Wave type of each channel independently.
+//                             - Adjust frequency, phase , volume, and the wave type of each channel independently.
 //
 
 #include<stdio.h>
@@ -22,7 +22,7 @@
 #define PERIODS         32
 #define PERIOD_SIZE     256
 #define RATE            44100   // Sample rate
-#define BUFFER_TIME     50000   // 50 ms
+#define BUFFER_TIME     8000    // 12 ms
 #define MAX_DEVICE_NAME    256
 #define MAX_FILE_PATH      256
 
@@ -40,8 +40,8 @@
 
 unsigned int Grate = RATE;                                                         // Default sample rate
 unsigned int GbufferTime = BUFFER_TIME;                                            // Default buffer time (latency) in us
-unsigned int GbufferSize = BUFFER_TIME * (RATE * 0.000001);                          // Default buffer size (frames)
-unsigned int GperiodSize = (BUFFER_TIME * (RATE * 0.000001))/16;                     // It's NOT included with hardware parameters settings
+unsigned int GbufferSize = BUFFER_TIME * (RATE * 0.000001);                        // Default buffer size (frames)
+unsigned int GperiodSize = 32;                                                     // It's NOT included with hardware parameters settings
 
 enum { SINE_WAVE, SQUARE_WAVE, TRIANGULAR_WAVE, SAWTOOTH_WAVE};
 char *GwaveTypes[4] = { "SINE", "SQUARE", "TRIANGULAR", "SAWTOOTH"};
@@ -65,8 +65,8 @@ unsigned int GVVolLen = strlen(V_VOL);
 
 bool   Gexit = false;               // Exit the write_loop
 
-void set_hwparams(int pcmFD);        // Setting hardware parameters
-void set_swparams(int pcmFD);        // Setting software parameters
+void set_hwparams(int pcmFD);        // Setting hardware parameters for system default Speaker
+void set_swparams(int pcmFD);        // Setting software parameters for system default Speaker
 void sound_generator(int pcmFD);    // Generate sound
 void *Tspeaker_CTRL(void *);        // [Thread function] Speaker Control
 void terminal_CTRL(int state);      // Terminal control
@@ -305,7 +305,7 @@ void set_swparams(int pcmFD)
 // Description      : Generate sound waves frames and send it to the speaker
 void sound_generator(int pcmFD)
 {
-     short buf[GbufferSize * CHANNELS];
+    short buf[GbufferSize * CHANNELS];
 
     memset(buf, 0, sizeof(buf));
 
@@ -314,9 +314,9 @@ void sound_generator(int pcmFD)
     while(!Gexit)
     {
         for(int i = 0 ; i < CHANNELS ; ++i)
-            wave_generator(i, buf, GperiodSize);
+            wave_generator(i, buf, GbufferSize);
 
-        write_frames(pcmFD, buf, GperiodSize);
+        write_frames(pcmFD, buf, GbufferSize);
     }
 
 }
@@ -870,10 +870,13 @@ void write_frames(int pcmFD, short *ptr, snd_pcm_uframes_t cPtr)
 
         if((ioctl(pcmFD, SNDRV_PCM_IOCTL_WRITEI_FRAMES, &sndXferi)) < 0)
         {
+
+            ioctl(pcmFD, SNDRV_PCM_IOCTL_PREPARE);
+/*
             fprintf(stderr, "Error write_loop() to snd driver: ");
             perror(NULL);
             terminal_CTRL(false);   // Return the terminal to it's perivous state
-            exit(-1);
+            exit(-1);*/
         }
 
         ptr += sndXferi.result;
